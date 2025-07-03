@@ -33,10 +33,12 @@ export async function POST(request: Request) {
       { message: "Message sent successfully", data },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error("Failed to send message:", error);
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
+
     return NextResponse.json(
-      { message: "Failed to send message", error: error.message },
+      { message: "Failed to send message", error: message },
       { status: 500 }
     );
   }
