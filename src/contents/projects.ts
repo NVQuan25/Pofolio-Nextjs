@@ -65,8 +65,8 @@ export const projects: Project[] = [
     description:
       "A personal portfolio website showcasing my skills and projects.",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS"],
-    githubLink: "https://pofolio-murex.vercel.app",
-    demoLink: "",
+    githubLink: "https://github.com/NVQuan25/Pofolio-Nextjs",
+    demoLink: "https://pofolio-iota.vercel.app/",
     image: "/projects/portfolio.png",
   },
 ];
