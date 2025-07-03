@@ -1,4 +1,8 @@
-import { NextResponse } from 'next/server'
+// /app/api/contact/route.ts
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface ContactRequestBody {
   name: string;
@@ -8,22 +12,32 @@ interface ContactRequestBody {
 
 export async function POST(request: Request) {
   try {
-    await request.json() as ContactRequestBody
-    // Here you would typically:
-    // 1. Validate the input
-    // 2. Send an email using a service like SendGrid, AWS SES, etc.
-    // 3. Store the message in a database if needed
+    const body: ContactRequestBody = await request.json();
 
-    // For now, we'll just simulate a successful response
+    const { name, email, message } = body;
+
+    const data = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
+      to: "vq.2509.2003@gmail.com",
+      subject: `New contact from ${name}`,
+      html: `
+        <h2>You've got a new message</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `,
+    });
+
     return NextResponse.json(
-      { message: 'Message sent successfully' },
+      { message: "Message sent successfully", data },
       { status: 200 }
-    )
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
+    );
+  } catch (error: any) {
+    console.error("Failed to send message:", error);
     return NextResponse.json(
-      { message: errorMessage },
+      { message: "Failed to send message", error: error.message },
       { status: 500 }
-    )
+    );
   }
-} 
+}
